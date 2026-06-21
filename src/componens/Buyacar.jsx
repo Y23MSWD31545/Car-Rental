@@ -1,119 +1,132 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import axios from "axios";
 import "../componens/Buyacar.css";
 import Carcards from "../Pages/Carcards";
 import car1 from "../imgs/car1.avif";
-import car2 from "../imgs/car2.avif";
-import car3 from "../imgs/car3.jpg";
-import car4 from "../imgs/car4.avif";
-import car5 from "../imgs/car5.avif"; 
-import car6 from "../imgs/car6.webp"; 
-import car7 from "../imgs/car7.webp"; 
-import car8 from "../imgs/car8.avif"; 
-import car9 from "../imgs/car9.jpg"; 
 import { useNavigate } from "react-router-dom";
+import { CarContext } from "../context/CarContext";
+import BookingModal from "./BookingModal";
 
+/* ─────────────────────────────────────────────
+   CarReviewBadge — avg rating + 2 snippets
+───────────────────────────────────────────── */
+const CarReviewBadge = ({ carId, allBookings }) => {
+  const carReviews = useMemo(() => {
+    return allBookings.filter(
+      (b) =>
+        b.status?.toLowerCase() === "completed" &&
+        b.rating != null &&
+        b.review &&
+        // match by car.id if nested car object present, else carId field
+        (b.car?.id === carId || b.carId === carId)
+    );
+  }, [allBookings, carId]);
+
+  if (carReviews.length === 0) return null;
+
+  const avg = carReviews.reduce((s, b) => s + b.rating, 0) / carReviews.length;
+  const avgRounded = Math.round(avg * 10) / 10;
+  const recent = [...carReviews].sort((a, b) => b.id - a.id).slice(0, 2);
+
+  return (
+    <div className="cr-badge-wrap">
+      {/* Rating summary */}
+      <div className="cr-rating-summary">
+        <span className="cr-stars-row">
+          {[1,2,3,4,5].map((s) => (
+            <span key={s} style={{ color: s <= Math.round(avg) ? "#f59e0b" : "#d1d5db" }}>★</span>
+          ))}
+        </span>
+        <span className="cr-avg-num">{avgRounded.toFixed(1)}</span>
+        <span className="cr-review-count">({carReviews.length} Review{carReviews.length !== 1 ? "s" : ""})</span>
+      </div>
+
+      {/* Recent review snippets */}
+      <div className="cr-snippets">
+        {recent.map((b) => (
+          <div key={b.id} className="cr-snippet">
+            <div className="cr-snippet-stars">
+              {[1,2,3,4,5].map((s) => (
+                <span key={s} style={{ color: s <= b.rating ? "#f59e0b" : "#d1d5db", fontSize: "0.85rem" }}>★</span>
+              ))}
+            </div>
+            <p className="cr-snippet-text">"{b.review}"</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/* ─────────────────────────────────────────────
+   Main Component
+───────────────────────────────────────────── */
 const Buyacar = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  const carData = [
-    {
-      company: "Toyota",
-      model: "Hyryder",
-      image: car1,
-      customPickup: true,
-      speed: "120 Km/h",
-      seating: "8 Seater",
-      luggage: "10 luggage",
-      price: "#22k/day"
-    },
-    {
-      company: "Honda",
-      model: "City",
-      image: car2,
-      customPickup: true,
-      speed: "110 Km/h",
-      seating: "5 Seater",
-      luggage: "6 luggage",
-      price: "#18k/day"
-    },
-    {
-      company: "Hyundai",
-      model: "Creta",
-      image: car3,
-      customPickup: true,
-      speed: "115 Km/h",
-      seating: "5 Seater",
-      luggage: "8 luggage",
-      price: "#20k/day"
-    },
-    {
-      company: "Maruti Suzuki",
-      model: "Swift",
-      image: car4,
-      customPickup: true,
-      speed: "100 Km/h",
-      seating: "5 Seater",
-      luggage: "4 luggage",
-      price: "#15k/day"
-    },
-    {
-      company: "BMW",
-      model: "X5",
-      image:car5, // Use car5 if available, otherwise fallback to car1
-      customPickup: true,
-      speed: "150 Km/h",
-      seating: "5 Seater",
-      luggage: "8 luggage",
-      price: "#50k/day"
-    },
-    {
-      company: "Audi",
-      model: "A6",
-      image:car6, // Use car6 if available, otherwise fallback to car2
-      customPickup: true,
-      speed: "140 Km/h",
-      seating: "5 Seater",
-      luggage: "7 luggage",
-      price: "#45k/day"
-    },
-    {
-      company: "Mercedes-Benz",
-      model: "C-Class",
-      image:car7, // Use car7 if available, otherwise fallback to car3
-      customPickup: true,
-      speed: "160 Km/h",
-      seating: "5 Seater",
-      luggage: "9 luggage",
-      price: "#55k/day"
-    },
-    {
-      company: "Volkswagen ",
-      model: "Tiguan",
-      image:car8, 
-      customPickup: true,
-      speed: "160 Km/h",
-      seating: "5 Seater",
-      luggage: "9 luggage",
-      price: "#55k/day"
-    },
-    {
-      company: "Volvo",
-      model: "XC40",
-      image:car9, // Use car5 if available, otherwise fallback to car4
-      customPickup: true,
-      speed: "130 Km/h",
-      seating: "7 Seater",
-      luggage: "10 luggage",
-      price: "#40k/day"
+  const [selectedCarBooking, setSelectedCarBooking] = useState(null);
+  const [cars, setCars] = useState([]);
+  const [allBookings, setAllBookings] = useState([]);
+
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/cars");
+        setCars(response.data);
+      } catch (error) {
+        console.log("Error fetching cars:", error);
+      }
+    };
+
+    const fetchBookings = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/bookings");
+        setAllBookings(Array.isArray(response.data) ? response.data : []);
+      } catch (error) {
+        console.log("Error fetching bookings for reviews:", error);
+        setAllBookings([]);
+      }
+    };
+
+    fetchCars();
+    fetchBookings();
+  }, []);
+
+
+  const handleBookNow = (car) => {
+    console.log("SELECTED CAR:", car); // 🔍 DEBUG
+    setSelectedCarBooking(car); // ✅ store original car
+  };
+
+  const handleBookingSubmit = async (bookingData) => {
+    const username = localStorage.getItem("username");
+
+    if (!username) {
+      alert("Please login first to book a car.");
+      navigate("/login");
+      return;
     }
-  ];
 
+    try {
+      const response = await axios.post("http://localhost:8080/api/bookings", {
+        carId: selectedCarBooking.id,
+        username: username,
+        startDate: bookingData.startDate,
+        endDate: bookingData.endDate
+      });
 
-  const handleBookNow = () => {
-    navigate("/payment");
+      alert(response.data);
+
+      // Refresh UI after booking
+      window.location.reload();
+    } catch (error) {
+      console.error("Booking error:", error);
+      alert("Booking failed: " + (error.response?.data || "Server error"));
+    }
+
+    setSelectedCarBooking(null);
   };
 
   const handleSearch = () => {
@@ -123,11 +136,11 @@ const Buyacar = () => {
     }
 
     const query = searchQuery.toLowerCase().trim();
-    const filteredCars = carData.filter(
-      car => car.company.toLowerCase().includes(query) || 
-             car.model.toLowerCase().includes(query)
+    const filteredCars = cars.filter(
+      car => (car.brand && car.brand.toLowerCase().includes(query)) ||
+        (car.name && car.name.toLowerCase().includes(query))
     );
-    
+
     setSearchResults(filteredCars);
   };
 
@@ -140,23 +153,34 @@ const Buyacar = () => {
   };
 
   const renderCarCards = (cars) => {
-    return cars.map((car, index) => (
-      <div key={index}>
-        <Carcards
-          one={car.customPickup ? "Custom picking available" : "Standard pickup"}
-          two={`${car.company} ${car.model}`}
-          three={car.image}
-          four1={<ion-icon name="speedometer-outline"></ion-icon>}
-          four2={<ion-icon name="people-outline"></ion-icon>}
-          four3={<ion-icon name="bag-remove-outline"></ion-icon>}
-          five1={car.speed}
-          five2={car.seating}
-          five3={car.luggage}
-          six1={car.price}
-          six2={<button onClick={handleBookNow}>Rent Now</button>}
-        />
-      </div>
-    ));
+    return cars.map((car, index) => {
+      console.log("Car data:", car);
+      return (
+        <div key={car.id}>
+          <Carcards
+            one={car.customPickup !== false ? "Custom picking available" : "Standard pickup"}
+            two={`${car.brand || ""} ${car.name || ""}`}
+            three={car.imageUrl || car1}
+            four1={<ion-icon name="speedometer-outline"></ion-icon>}
+            four2={<ion-icon name="people-outline"></ion-icon>}
+            four3={<ion-icon name="bag-remove-outline"></ion-icon>}
+            five1={car.speed ? `${car.speed} Km/h` : "N/A"}
+            five2={car.seats ? `${car.seats} Seater` : "N/A"}
+            five3={car.luggage ? `${car.luggage} luggage` : "N/A"}
+            six1={`₹${car.pricePerDay ? car.pricePerDay.toLocaleString() : 0}/day`}
+            six2={
+              car.available === false ? (
+                <button disabled style={{ background: '#9ca3af', cursor: 'not-allowed' }}>Not Available</button>
+              ) : (
+                <button onClick={() => handleBookNow(car)}>Rent Now</button>
+              )
+            }
+          />
+          {/* Public review badge injected below each car card */}
+          <CarReviewBadge carId={car.id} allBookings={allBookings} />
+        </div>
+      )
+    });
   };
 
   // Function to split cars into chunks of given size
@@ -185,12 +209,12 @@ const Buyacar = () => {
           bookings <a href="#" onClick={handleOpenModal}>Terms and conditions apply</a>
         </h3>{" "}
       </div>
-      
+
       <div className="search-container">
         <div className="search-box">
-          <input 
-            type="text" 
-            placeholder="Search for car company or model..." 
+          <input
+            type="text"
+            placeholder="Search for car company or model..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -216,7 +240,7 @@ const Buyacar = () => {
         ) : (
           <>
             {/* Display all cars in chunks of 3 */}
-            {chunkArray(carData, 3).map((carChunk, index) => (
+            {chunkArray(cars, 3).map((carChunk, index) => (
               <div className="carrow" key={index}>
                 {renderCarCards(carChunk)}
               </div>
@@ -301,6 +325,13 @@ const Buyacar = () => {
           </div>
         </div>
       </div>
+      {selectedCarBooking && (
+        <BookingModal
+          car={selectedCarBooking}
+          onClose={() => setSelectedCarBooking(null)}
+          onSubmit={handleBookingSubmit}
+        />
+      )}
     </section>
   );
 };

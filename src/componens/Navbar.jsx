@@ -1,83 +1,168 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./Navbar.css";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  const loadUser = () => {
+    const loggedInUser = localStorage.getItem("user");
+
+    if (loggedInUser) {
+      setUser(JSON.parse(loggedInUser));
+    } else {
+      setUser(null);
+    }
+  };
 
   useEffect(() => {
-    // Check if user is logged in
-    const loggedInUser = localStorage.getItem("user");
-    if (loggedInUser) {
-      const foundUser = JSON.parse(loggedInUser);
-      setUser(foundUser);
-    }
+    loadUser();
+
+    window.addEventListener("storage", loadUser);
+
+    return () => {
+      window.removeEventListener("storage", loadUser);
+    };
   }, []);
 
   const handleLogout = () => {
-    // Clear user from local storage and state
     localStorage.removeItem("user");
     setUser(null);
-    // Redirect can be added here if needed
-    window.location.href = "/";
+    navigate("/");
+    window.location.reload();
   };
 
   return (
-    <div>
-      <div className="navbar">
-        <ul>
-          <NavLink style={{ color: "white" }} to="/">
+    <nav className="navbar">
+      <div className="navbar-container">
+
+        {/* Logo */}
+        <NavLink to="/" className="logo">
+          Premium CR
+        </NavLink>
+
+        {/* Navigation Links */}
+        <ul className="nav-links">
+
+          <li>
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              Home
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/buyacar"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              BookCar
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/recommend"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              AI Recommend
+            </NavLink>
+          </li>
+
+          {/* GPS Tracker */}
+          {(!user || user.role !== "admin") && (
             <li>
-              {" "}
-              <b> Premium CR</b>
-            </li>
-          </NavLink>
-          <NavLink to="/">
-            {" "}
-            <li>Home</li>
-          </NavLink>
-          <NavLink to="/buyacar">
-            {" "}
-            <li>BookCar</li>
-          </NavLink>
-          <NavLink to="/gpstracker">
-            {" "}
-            <li>GPS Tracker</li>
-          </NavLink>
-          <NavLink to="/aboutus">
-            {" "}
-            <li>About</li>
-          </NavLink>
-          <NavLink to="/contactus">
-            <li style={{ backgroundColor: " #043812", color: "white" }}>
-              Contact
-            </li>
-          </NavLink>
-          
-          {user ? (
-            <>
-              <NavLink to="/profile">
-                <li className="username-display" style={{ backgroundColor: "#043812", color: "white" }}>
-                  {user.username || "Profile"}
-                </li>
-              </NavLink>
-              <li 
-                onClick={handleLogout} 
-                style={{ backgroundColor: "#8B0000", color: "white", cursor: "pointer" }}
+              <NavLink
+                to="/gpstracker"
+                className={({ isActive }) => (isActive ? "active" : "")}
               >
-                Logout
+                GPS Tracker
+              </NavLink>
+            </li>
+          )}
+
+          {/* User Links */}
+          {user && user.role !== "admin" && (
+            <>
+              <li>
+                <NavLink
+                  to="/my-bookings"
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                >
+                  My Bookings
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  to="/rental-history"
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                >
+                  Rental History
+                </NavLink>
               </li>
             </>
-          ) : (
-            <NavLink to="/login">
-              <li style={{ backgroundColor: " #043812", color: "white" }}>
-                Login
-              </li>
-            </NavLink>
+          )}
+
+          {/* About after Rental History */}
+          {(!user || user.role !== "admin") && (
+            <li>
+              <NavLink
+                to="/aboutus"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                About Us
+              </NavLink>
+            </li>
+          )}
+
+          {/* Admin Dashboard */}
+          {user && user.role === "admin" && (
+            <li>
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                  `admin-btn${isActive ? " active" : ""}`
+                }
+              >
+                Admin Dashboard
+              </NavLink>
+            </li>
           )}
         </ul>
+
+        {/* Right Side */}
+        <div className="right-section">
+          {!user ? (
+            <NavLink to="/login">
+              <button className="login-btn">
+                Login
+              </button>
+            </NavLink>
+          ) : (
+            <>
+              <NavLink to="/profile">
+                <button className="profile-btn">
+                  {user.username}
+                </button>
+              </NavLink>
+
+              <button
+                className="logout-btn"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </>
+          )}
+        </div>
+
       </div>
-    </div>
+    </nav>
   );
 };
 

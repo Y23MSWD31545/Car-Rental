@@ -1,0 +1,219 @@
+/* ========================================
+   PROFILE PAGE - Premium Design
+   ======================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+.prof-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px 60px;
+  font-family: "Inter", "Poppins", sans-serif;
+}
+
+/* ── PROFILE CARD ── */
+.prof-card {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #0f2640 100%);
+  border-radius: 20px;
+  padding: 36px 40px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-bottom: 36px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.3);
+  flex-wrap: wrap;
+}
+
+.prof-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.3);
+}
+
+.prof-info {
+  flex: 1;
+}
+
+.prof-username {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 8px;
+}
+
+.prof-role-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.prof-role-admin {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.prof-role-user {
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+.prof-email-hint {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* ── SECTION TITLE ── */
+.prof-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 16px;
+}
+
+/* ── LOADING ── */
+.prof-loading {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+  font-size: 1rem;
+}
+
+/* ── STATS GRID ── */
+.prof-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 36px;
+}
+
+.prof-stat-card {
+  background: white;
+  border-radius: 14px;
+  padding: 20px 16px;
+  text-align: center;
+  border: 1.5px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s ease;
+  cursor: default;
+}
+
+.prof-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+}
+
+.prof-stat-icon {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.prof-stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.prof-stat-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── STAT COLORS ── */
+.stat-blue .prof-stat-value   { color: #3b82f6; }
+.stat-blue                    { border-color: #bfdbfe; }
+.stat-green .prof-stat-value  { color: #16a34a; }
+.stat-green                   { border-color: #bbf7d0; }
+.stat-yellow .prof-stat-value { color: #ca8a04; }
+.stat-yellow                  { border-color: #fde68a; }
+.stat-indigo .prof-stat-value { color: #4f46e5; }
+.stat-indigo                  { border-color: #c7d2fe; }
+.stat-emerald .prof-stat-value{ color: #059669; }
+.stat-emerald                 { border-color: #a7f3d0; }
+.stat-red .prof-stat-value    { color: #dc2626; }
+.stat-red                     { border-color: #fecaca; }
+
+/* ── QUICK ACTIONS ── */
+.prof-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.prof-action-btn {
+  background: #f1f5f9;
+  color: #0f172a;
+  border: 1.5px solid #e2e8f0;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-family: "Inter", "Poppins", sans-serif;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.prof-action-btn:hover {
+  background: #0f172a;
+  color: white;
+  border-color: #0f172a;
+  transform: translateY(-1px);
+}
+
+.prof-action-admin {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #0f172a;
+  border-color: #fbbf24;
+}
+
+.prof-action-admin:hover {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #0f172a;
+  border-color: #f59e0b;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .prof-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 28px 20px;
+  }
+
+  .prof-username {
+    font-size: 1.4rem;
+  }
+
+  .prof-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .prof-actions {
+    flex-direction: column;
+  }
+
+  .prof-action-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

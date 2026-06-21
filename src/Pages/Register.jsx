@@ -1,48 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../componens/Buyacar.css";
 
 const Register = () => {
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const form = e.target;
 
-    const name = form.name.value;
     const username = form.username.value;
     const email = form.email.value;
-    const phone = form.phone.value;
     const password = form.password.value;
     const confirmPassword = form.confirmPassword.value;
 
-    // Optional: check confirm password
+    // Password validation
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
 
-    const user = { name, username, email, phone, password };
+    setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:8080/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user),
-      });
+      const payload = {
+        username,
+        email,
+        password,
+      };
 
-      if (res.ok) {
+      const response = await axios.post(
+        "http://localhost:8080/api/auth/register",
+        payload
+      );
+
+      if (response.data.success) {
         alert("Registration successful!");
         navigate("/login");
       } else {
-        const errData = await res.json();
-        alert("Registration failed: " + errData.message);
+        alert(response.data.message);
       }
     } catch (err) {
-      alert("An error occurred: " + err.message);
+      if (err.response) {
+        alert(
+          "Registration failed: " +
+          (err.response.data.message ||
+            err.response.data ||
+            "Unknown error")
+        );
+      } else {
+        alert("An error occurred: " + err.message);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,17 +64,53 @@ const Register = () => {
     <div className="container">
       <div className="contactusmaindiv">
         <h1>Register Now</h1>
+
         <form className="form" onSubmit={handleSubmit}>
-          <input type="text" id="name" name="name" placeholder="Name" required />
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Name"
+            required
+          />
           <br />
-          <input type="text" id="username" name="username" placeholder="Username" required />
+
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Username"
+            required
+          />
           <br />
-          <input type="email" id="email" name="email" placeholder="Email" required />
+
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Email"
+            required
+          />
           <br />
-          <input type="tel" id="phone" name="phone" placeholder="Phone" required />
+
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="Phone"
+            required
+          />
           <br />
-          <input type="password" id="password" name="password" placeholder="Password" required />
+
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
           <br />
+
           <input
             type="password"
             id="confirmPassword"
@@ -69,10 +119,21 @@ const Register = () => {
             required
           />
           <br />
-          <button type="submit" style={{ width: "100%", height: "3rem", textAlign: "center" }}>
-            Submit
+
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              width: "100%",
+              height: "3rem",
+              textAlign: "center",
+              backgroundColor: loading ? "#ccc" : "",
+            }}
+          >
+            {loading ? "Submitting..." : "Submit"}
           </button>
         </form>
+
         <p style={{ textAlign: "center", marginTop: "1rem" }}>
           Already Have An Account <a href="/login">Login</a>
         </p>

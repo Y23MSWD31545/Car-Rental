@@ -1,0 +1,58 @@
+﻿On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   .github/workflows/cicd.yml
+	modified:   package-lock.json
+	modified:   package.json
+	modified:   src/App.jsx
+	modified:   src/Pages/Login.jsx
+	modified:   src/Pages/Register.jsx
+	modified:   src/componens/Buyacar.jsx
+	modified:   src/componens/Navbar.jsx
+	modified:   vite.config.js
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   package-lock.json
+	modified:   package.json
+	modified:   src/App.jsx
+	modified:   src/Pages/Carcards.jsx
+	modified:   src/Pages/Contactus.jsx
+	modified:   src/Pages/Homepage.jsx
+	modified:   src/Pages/Login.jsx
+	modified:   src/Pages/Register.jsx
+	deleted:    src/componens/AddCar.css
+	deleted:    src/componens/AddCar.jsx
+	deleted:    src/componens/Buyacar.css
+	deleted:    src/componens/Buyacar.jsx
+	deleted:    src/componens/Card1.jsx
+	deleted:    src/componens/GPSTracker.css
+	deleted:    src/componens/GPSTracker.jsx
+	deleted:    src/componens/Navbar.css
+	deleted:    src/componens/Navbar.jsx
+	deleted:    src/componens/Profile.css
+	deleted:    src/componens/Profile.jsx
+	deleted:    src/componens/Servicecard.jsx
+	modified:   src/index.css
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	log.txt
+	log2.txt
+	src/components/AddCar.css
+	src/components/AddCar.jsx
+	src/components/Buyacar.css
+	src/components/Buyacar.jsx
+	src/components/Card1.jsx
+	src/components/GPSTracker.css
+	src/components/GPSTracker.jsx
+	src/components/Navbar.css
+	src/components/Navbar.jsx
+	src/components/Profile.css
+	src/components/Profile.jsx
+	src/components/Servicecard.jsx
+	status.txt
+

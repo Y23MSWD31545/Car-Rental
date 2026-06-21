@@ -1,0 +1,128 @@
+.bm-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.bm-modal {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.bm-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #64748b;
+  transition: color 0.2s;
+}
+
+.bm-close:hover {
+  color: #0f172a;
+}
+
+.bm-modal h2 {
+  margin-top: 0;
+  color: #1e293b;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.bm-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.bm-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.bm-form-group label {
+  font-weight: 600;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.bm-form-group input {
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+  font-family: inherit;
+}
+
+.bm-form-group input:focus {
+  border-color: #3b82f6;
+}
+
+.bm-summary {
+  background: #f8fafc;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin-top: 10px;
+}
+
+.bm-summary p {
+  margin: 5px 0;
+  color: #475569;
+  display: flex;
+  justify-content: space-between;
+}
+
+.bm-summary h3 {
+  margin: 15px 0 0 0;
+  color: #0f172a;
+  border-top: 1px solid #cbd5e1;
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.2rem;
+}
+
+.bm-submit-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.bm-submit-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.bm-submit-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}

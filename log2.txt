@@ -1,0 +1,29 @@
+﻿commit b6b20b398afb36c0c9763a78db34a50f3b27d730
+Author: Y23MSWD31545 <1428raviroyal@gmail.com>
+Date:   Sun May 11 01:58:05 2025 +0530
+
+    Add .jsx extension to component imports
+
+commit f2f9986e8208cf7e11e38f26d541bbea806324ec
+Author: Y23MSWD31545 <1428raviroyal@gmail.com>
+Date:   Sun May 11 01:48:55 2025 +0530
+
+    Updated package.json with compatible dependency versions
+
+commit 1beb863734220b44d664e240c16b8e6d33f074c5
+Author: Y23MSWD31545 <1428raviroyal@gmail.com>
+Date:   Sun May 11 00:54:18 2025 +0530
+
+    Fix build issue and update package.json
+
+commit 3cecc33ac569c3e648c1ddbd4d4770d98e99ff2c
+Author: Y23MSWD31545 <1428raviroyal@gmail.com>
+Date:   Sun May 11 00:37:01 2025 +0530
+
+    Initial project setup with updated and new components
+
+commit c58655cc2519c67d8da4cd8b72273252d778920a
+Author: 2300031545 <2300031545@kluniversity.in>
+Date:   Wed Apr 16 07:27:54 2025 +0530
+
+    Initial commit
